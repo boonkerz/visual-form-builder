@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import InputElement from '@/model/InputElement';
+import EMailElement from '@/model/EMailElement';
 import { computed } from 'vue';
 
 const props = defineProps({
-    modelValue: InputElement
+    modelValue: EMailElement
 })
 
 let emit = defineEmits(['update:modelValue']);

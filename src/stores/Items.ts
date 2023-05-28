@@ -9,14 +9,16 @@ export const useElementStore = defineStore('items', {
       items: [] as BaseElement[],
       activeItem: {} as BaseElement | {},
       showProperties: false,
-      sourceDragUuid: ""
+      sourceDragUuid: "",
+      dragMode: "",
   }),
   getters: {
     getCount: (state) => state.count,
     getItems: (state) => state.items,
     getActiveItem: (state) => state.activeItem as BaseElement,
     isShowPropierties: (state) => state.showProperties,
-    getSourceDragUuid: (state) => state.sourceDragUuid
+    getSourceDragUuid: (state) => state.sourceDragUuid,
+    getDragMode: (state) => state.dragMode
   },
   actions: {
     addElement(item: BaseElement) {
@@ -39,20 +41,32 @@ export const useElementStore = defineStore('items', {
     setActiveItem(item: BaseElement) {
       this.activeItem = item;
     },
-    moveItemToIndex(oldIndex: number, newIndex: number) {
-      const item = this.items.splice(oldIndex, 1)[0];
-      this.items.splice(newIndex, 0, item);
+    deleteItem(item: BaseElement) {
+      for (let i = 0; i < this.items.length; ++i) {
+        if(this.items[i].uuid === item.uuid) {
+          this.items.splice(i, 1);
+          break;
+        }
+        this.items[i].deleteItem(item)
+      }
+    },
+    moveSortItemToEmptyElement(targetUuid: string, column: Number) {
+      const item = this.cutItem(this.items, this.sourceDragUuid);
+      this.insertItemInEmptyColumn(this.items, item!, targetUuid, column)
+
     },
     moveItemBefore(dragUuid: string, targetUuid: string): boolean {
       const item = this.cutItem(this.items, dragUuid);
-      console.log("itemscount", this.items.length)
       return this.insertItem(this.items, item!, targetUuid)
+    },
+    addElementAfter(item: BaseElement, targetUuid: string) {
+      this.insertItem(this.items, item!, targetUuid)
     },
     setSourceDragUuid(uuid: string) {
       this.sourceDragUuid = uuid
     },
     cutItem(items: BaseElement[], existingUuid: string) {
-      var item: BaseElement|null = null;
+      let item: BaseElement|null = null;
       items.forEach((element,indexArray) => {
           if(element.uuid === existingUuid) {
             item = items.splice(indexArray, 1)[0];
@@ -65,7 +79,7 @@ export const useElementStore = defineStore('items', {
       return item;
     },
     insertItem(items: BaseElement[], item: BaseElement, targetUuid: string): boolean {
-      var inserted = false;
+      let inserted = false;
       for (let i = 0; i < items.length; ++i) {
         if(items[i].uuid === targetUuid) {
           items.splice(i, 0, item);
@@ -78,6 +92,17 @@ export const useElementStore = defineStore('items', {
       }
 
       return inserted
+    },
+    insertItemInEmptyColumn(items: BaseElement[], item: BaseElement, targetUuid: string, column: Number): boolean {
+      let inserted = false;
+      for (let i = 0; i < items.length; ++i) {
+          inserted = items[i].insertItemInEmptyColumn(item, targetUuid, column)
+      }
+
+      return inserted
+    },
+    setDragMode(mode: string) {
+      this.dragMode = mode
     }
   }
 })

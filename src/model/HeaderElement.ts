@@ -2,7 +2,7 @@ import BaseElement from "./BaseElement";
 
 export default class HeaderElement extends BaseElement  {
     kind: string = "h1"
-    label: String = Math.random().toString()
+    label: String = "Header"
     subheader: String = "Subheader"
     
     constructor() {

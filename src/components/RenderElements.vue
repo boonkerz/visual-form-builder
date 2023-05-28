@@ -4,54 +4,57 @@ import HeaderElementForm from './elements/HeaderElementForm.vue'
 import InputElementForm from './elements/InputElementForm.vue'
 import Column2ElementForm from './elements/Column2ElementForm.vue'
 import Column2Element from '@/model/Column2Element';
-import type InputElement from '@/model/InputElement';
+import InputElement from '@/model/InputElement';
 import { useElementStore } from '@/stores/Items';
 import type { PropType } from 'vue';
-import { isTSMethodSignature, isTemplateElement } from '@babel/types';
-
-const props = defineProps({
-    items: Array as PropType<BaseElement[]>
-})
+import SelectElement from '@/model/SelectElement';
+import SelectElementForm from './elements/SelectElementForm.vue'
+import EMailElement from '@/model/EMailElement';
+import EMailElementForm from './elements/EMailElementForm.vue'
+import Parser from '@/Parser';
 
 const store = useElementStore()
 
-var dragPrevIndex : number = 0;
-
-var dragMode : string = "";
-
-var dragUuid : string = "";
-
 const elementFocus = (event: Event, item: BaseElement) => {
     store.changeFocus(item.uuid)
+    store.setShowProperties(true)
+    store.setActiveItem(item)
     event.stopImmediatePropagation()
 }
 
-const startDrag = (event: DragEvent, index: number, uuid: string) => { 
-    console.log("startdrag")
+const startDrag = (event: DragEvent, uuid: string) => { 
     event.dataTransfer!.dropEffect = 'move';
     event.dataTransfer!.effectAllowed = 'move';
     event.dataTransfer?.setData('mode', "sort");
-    dragMode = "sort"
+    store.setDragMode("sort")
     store.setSourceDragUuid(uuid)
-    event.dataTransfer?.setData('prev-index', index.toString());
+    event.stopImmediatePropagation()
     
 }
 
-const dragEnter = (event: DragEvent,index: number, uuid: string) => {
-    console.log("target", uuid)
-    console.log("source", dragUuid)
-    if(dragMode == "sort" && uuid != dragUuid) {
-        store.moveItemBefore(dragUuid, uuid)
-        //event.stopImmediatePropagation
+const dragEnter = (event: DragEvent, uuid: string) => {
+    if(store.getDragMode == "sort" && uuid != store.getSourceDragUuid) {
+        store.moveItemBefore(store.getSourceDragUuid, uuid)
+        event.stopImmediatePropagation()
     }
 }
 
-const stopDrag = (event: DragEvent, index: number) => {
-    console.log("stopdrag")
+const stopDrag = (event: DragEvent, uuid: string) => {
     if(event.dataTransfer?.getData('mode') == "sort") {
-        dragMode = ""
+        store.setDragMode("")
         event.stopImmediatePropagation()
     }
+    if(store.dragMode == "insert") {
+        const itemType = Number(event.dataTransfer?.getData('itemId'));
+                
+        store.addElementAfter(Parser.getModelForType(itemType), uuid)
+        store.clearSelection()
+        event.stopImmediatePropagation()
+    }
+}
+
+const deleteItem = (item: BaseElement) => {
+    store.deleteItem(item)
 }
 
 const editElementProperties = (item: BaseElement) => {
@@ -62,9 +65,7 @@ const editElementProperties = (item: BaseElement) => {
 
 <template>
     <div class="row g-3">
-        <div class="d-flex" @dragstart="startDrag($event, index, item.uuid)" @dragenter="dragEnter($event, index, item.uuid)" @drop="stopDrag($event, index)" draggable="true" v-on:click="elementFocus($event, item)" v-bind:class="{ 'border focused-element': item.isFocused === true }" v-for="(item, index) in items" :key="item.uuid">
-            <div>{{ item.uuid }}</div>
-
+        <div class="d-flex" @dragenter="dragEnter($event, item.uuid)" @drop="stopDrag($event, item.uuid)" v-on:click="elementFocus($event, item)" v-bind:class="{ 'border focused-element': item.isFocused === true }" v-for="item in items" :key="item.uuid">
             <HeaderElementForm
                 v-if="item.type === 1"
                 v-bind:field="item"
@@ -77,6 +78,18 @@ const editElementProperties = (item: BaseElement) => {
                 >
                 </InputElementForm>
 
+            <EMailElementForm
+                v-if="item.type === 4"
+                v-model="item as EMailElement"
+                >
+                </EMailElementForm>
+            
+            <SelectElementForm
+                v-if="item.type === 3"
+                v-model="item as SelectElement"
+                >
+                </SelectElementForm>
+
             <Column2ElementForm
                 v-if="item.type === 10"
                 v-model="item as Column2Element"
@@ -84,10 +97,13 @@ const editElementProperties = (item: BaseElement) => {
                 </Column2ElementForm>
 
             <div class="action-circles" v-bind:class="{ invisible: item.isFocused === false }">
+                <div @dragstart="startDrag($event, item.uuid)" draggable="true" style="top: 80px;" class="action-circle properties-circle">
+                    <span class="bi bi-arrows-move"></span> <span class="properties-text">Move</span>
+                </div>
                 <div v-on:click="editElementProperties(item)" class="action-circle properties-circle">
                     <span class="bi bi-gear"></span> <span class="properties-text">Properties</span>
                 </div>
-                <div class="action-circle delete-circle">
+                <div v-on:click="deleteItem(item)" class="action-circle delete-circle">
                     <span class="bi bi-trash"></span> <span class="delete-text">Remove</span>
                 </div>
             </div>

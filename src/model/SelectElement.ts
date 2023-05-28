@@ -1,15 +1,14 @@
 import BaseElement from "./BaseElement";
 
-export default class InputElement extends BaseElement  {
+export default class SelectElement extends BaseElement  {
     value: string = ""
     label: string = "Label"
-    placeholder: string = "Placeholder"
     required: boolean = false
     name: string = ""
-    htmlType: string = "text"
+    options: string = ""
     
     constructor() {
         super();
-        this.type = 2
+        this.type = 3
     }
 }

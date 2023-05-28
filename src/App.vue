@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ElementProperties from './components/ElementProperties.vue'
-import SidebarVue from './components/Sidebar.vue'
+import TheSidebar from './components/TheSidebar.vue'
 import MainForm from './components/MainForm.vue'
 import { useElementStore } from './stores/Items';
 
@@ -17,7 +17,7 @@ const clearSelection = () => {
   <div class="d-flex">
     <div class="me-2" id="sidebar-wrapper">
         <div id="sidebar" class="collapse collapse-horizontal show border-end">
-          <SidebarVue/>
+          <TheSidebar/>
         </div>
     </div>
     <main class="flex-fill ms-5 ps-5 me-5 pe-5" v-on:click="clearSelection()">
@@ -32,5 +32,9 @@ const clearSelection = () => {
 </template>
 
 <style scoped>
+  #properties-wrapper, #sidebar-wrapper {
+    width: 15%
+  }
+
 
 </style>
