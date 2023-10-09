@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import SelectElement from '@/model/SelectElement';
-import { computed } from 'vue';
+import SelectElementOption from '@/model/SelectElementOption';
+import { computed, reactive } from 'vue';
 
 const props = defineProps({
     modelValue: SelectElement
@@ -12,6 +13,15 @@ const theModel = computed({
       get: () => props.modelValue,
       set: (value) => emit('update:modelValue', value),
   });
+
+const myObject = new SelectElementOption
+
+const addItem = () => {
+    const elm = new SelectElementOption
+    elm.label = myObject.label
+    elm.value = myObject.value
+    theModel.value?.options.push(elm)
+}
 
 </script>
 
@@ -34,8 +44,23 @@ const theModel = computed({
             <label class="form-check-label" for="flexSwitchCheckDefault">Required</label>
         </div>
     </div>
-    <div class="form-group">
-        <label>Options every item per line</label>
-        <textarea type="text" class="form-control form-control-sm" rows="5" v-model="theModel!.options"></textarea>
+    <h6>Options</h6>
+    <ul>
+        <li v-for="item in theModel?.options">
+            {{ item.value }}: {{ item.label }}
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-6 form-group">
+            <label>Value</label>
+            <input type="text" class="form-control form-control-sm" v-model="myObject!.value">
+        </div>
+        <div class="col-5 form-group">
+            <label>Label</label>
+            <input type="text" class="form-control form-control-sm" v-model="myObject!.label">
+        </div>
+        <div class="col-1">
+            <button type="button" v-on:click="addItem()">Add</button>
+        </div>
     </div>
 </template>

@@ -13,6 +13,10 @@ import EMailElement from '@/model/EMailElement';
 import EMailElementForm from './elements/EMailElementForm.vue'
 import Parser from '@/Parser';
 
+const props = defineProps({
+    items: Array as PropType<BaseElement[]>
+})
+
 const store = useElementStore()
 
 const elementFocus = (event: Event, item: BaseElement) => {
@@ -65,36 +69,31 @@ const editElementProperties = (item: BaseElement) => {
 
 <template>
     <div class="row g-3">
-        <div class="d-flex" @dragenter="dragEnter($event, item.uuid)" @drop="stopDrag($event, item.uuid)" v-on:click="elementFocus($event, item)" v-bind:class="{ 'border focused-element': item.isFocused === true }" v-for="item in items" :key="item.uuid">
+        <div class="d-flex flex-wrap" @dragenter="dragEnter($event, item.uuid)" @drop="stopDrag($event, item.uuid)" v-on:click="elementFocus($event, item)" v-bind:class="{ 'border focused-element': item.isFocused === true }" v-for="item in items" :key="item.uuid">
             <HeaderElementForm
                 v-if="item.type === 1"
                 v-bind:field="item"
-                >
-                </HeaderElementForm>
+                />
 
             <InputElementForm
                 v-if="item.type === 2"
                 v-model="item as InputElement"
-                >
-                </InputElementForm>
+                />
 
             <EMailElementForm
                 v-if="item.type === 4"
                 v-model="item as EMailElement"
-                >
-                </EMailElementForm>
+                />
             
             <SelectElementForm
                 v-if="item.type === 3"
                 v-model="item as SelectElement"
-                >
-                </SelectElementForm>
+                />
 
             <Column2ElementForm
                 v-if="item.type === 10"
                 v-model="item as Column2Element"
-                >
-                </Column2ElementForm>
+                />
 
             <div class="action-circles" v-bind:class="{ invisible: item.isFocused === false }">
                 <div @dragstart="startDrag($event, item.uuid)" draggable="true" style="top: 80px;" class="action-circle properties-circle">
@@ -130,7 +129,7 @@ const editElementProperties = (item: BaseElement) => {
 
 .action-circle:hover {
     border-radius: 500px;
-    right: -104px;
+    right: -40px;
     text-align: left;
     width: 100px;
 }
@@ -180,4 +179,5 @@ const editElementProperties = (item: BaseElement) => {
 .focused-element {
     border-color: blue !important;
 }
+
 </style>

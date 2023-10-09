@@ -3,6 +3,8 @@ import ElementProperties from './components/ElementProperties.vue'
 import TheSidebar from './components/TheSidebar.vue'
 import MainForm from './components/MainForm.vue'
 import { useElementStore } from './stores/Items';
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 
 const store = useElementStore()
 
@@ -14,27 +16,34 @@ const clearSelection = () => {
 </script>
 
 <template>
-  <div class="d-flex">
-    <div class="me-2" id="sidebar-wrapper">
-        <div id="sidebar" class="collapse collapse-horizontal show border-end">
-          <TheSidebar/>
-        </div>
-    </div>
-    <main class="flex-fill ms-5 ps-5 me-5 pe-5" v-on:click="clearSelection()">
-      <MainForm/>
-    </main>
-    <div class="ms-2" id="properties-wrapper">
-      <div id="properties" class="collapse collapse-horizontal show border-start">
-          <ElementProperties />
-      </div>
-    </div>
-  </div>
+  <splitpanes class="default-theme" horizontal :push-other-panes="false">
+    <pane size="10">
+1
+    </pane>
+    <pane>
+      <splitpanes :push-other-panes="false">
+        <pane>
+            <div id="sidebar" class="collapse collapse-horizontal show border-end">
+              <TheSidebar/>
+            </div>
+        </pane>
+        <pane size="70" v-on:click="clearSelection()">
+          <MainForm/>
+        </pane>
+        <pane>
+          <div id="properties" class="collapse collapse-horizontal show border-start">
+              <ElementProperties />
+          </div>
+        </pane>
+      </splitpanes>
+    </pane>
+    <pane size="10">2
+      
+    </pane>
+  </splitpanes>
+  
 </template>
 
 <style scoped>
-  #properties-wrapper, #sidebar-wrapper {
-    width: 15%
-  }
-
 
 </style>

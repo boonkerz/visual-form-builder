@@ -2,3 +2,11 @@ body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   background-color: #f5f5f5;
 }
+
+.splitpanes__pane {
+  box-shadow: 0 0 3px rgba(0, 0, 0, .2) inset;
+  position: relative;
+}
+
+
+html, body, #app {height: 100%;margin: 0;}

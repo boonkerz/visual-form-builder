@@ -12,10 +12,7 @@ const theModel = computed({
       get: () => props.modelValue,
       set: (value) => emit('update:modelValue', value),
   });
-  
-const splitStringByLine = (str: string) => {
-      return str.split("\n");
-    }
+
 
 </script>
 
@@ -26,7 +23,7 @@ const splitStringByLine = (str: string) => {
         :name="theModel?.name" 
         :required="theModel?.required"  
         class="form-control" >
-        <option v-for="option in splitStringByLine(theModel!.options)" :value="option" :selected="option == theModel?.value">{{option}}</option>
+        <option v-for="option in theModel!.options" :value="option" :selected="option.value == theModel?.value">{{option.label}}</option>
       </select>
     </div>
 </template>

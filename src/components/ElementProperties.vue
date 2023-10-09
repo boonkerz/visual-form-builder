@@ -17,7 +17,7 @@ import EMailElementProperties from './properties/EMailElementProperties.vue';
 </script>
 
 <template>
-    <div v-bind:class="{ 'invisible': store.isShowPropierties === false }" class="border-0 rounded-0 text-sm-start min-vh-100 p-1">
+    <div v-bind:class="{ 'invisible': store.isShowPropierties === false }" class="border-0 rounded-0 text-sm-start p-1">
         <HeaderElementProperties
             v-if="store.getActiveItem.type === 1"
             v-model="store.getActiveItem as HeaderElement"

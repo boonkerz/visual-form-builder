@@ -34,7 +34,7 @@ export default {
 </script>
 
 <template>
-    <div class="list-group border-0 rounded-0 text-sm-start min-vh-100 p-1 bg-dark">
+    <div class="list-group border-0 rounded-0 text-sm-start">
 
         <div id="header" class="list-group-item border-end-0 d-inline-block text-truncate" draggable="true" @dragstart="startDrag($event, '1')" @dragenter.prevent @dragover.prevent
     >

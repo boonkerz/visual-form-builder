@@ -15,6 +15,7 @@
     "@types/uuid": "^9.0.1",
     "jquery": "^3.7.0",
     "pinia": "^2.0.36",
+    "splitpanes": "^3.1.5",
     "uuid": "^9.0.0",
     "vue": "^3.3.2",
     "vue-draggable-plus": "^0.2.0-beta.1"

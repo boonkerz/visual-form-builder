@@ -2,8 +2,6 @@
 import RenderElements from './RenderElements.vue';
 import { useElementStore } from '@/stores/Items'
 import Parser from '@/Parser'
-
-
 export default {
     setup() {
         const store = useElementStore()
@@ -27,7 +25,7 @@ export default {
 }
 </script>
 <template>
-    <div class="w-100 p-2 border bg-light shadow-sm p-3 mb-5 bg-white rounded-3" @drop="onDrop($event)" @dragover.prevent>
+    <div class="border bg-light shadow-sm p-5 bg-white m-2" @drop="onDrop($event)" @dragover.prevent>
         <RenderElements v-bind:items="store.getItems" />
     </div>
 </template>
